@@ -61,9 +61,12 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # black dots are the real data points
 
 
-    plot1 = model_formula.plot(forecast)
+    
+    fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
+    ax = fig.gca()
+    ax.set_title("Prediction", size=12)
     if prediction_analysis:
-        plot1.show("BRyant")
+        fig.show()
         
     
 
@@ -104,7 +107,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 
     def plot_anomalies(forecasted):
         interval = alt.Chart(forecasted).mark_area(interpolate="basis", color = '#7FC97F').encode(
-        x=alt.X('ds:T',  title ='date'),
+        x=alt.X('ds:T',  title ='Date of Survey'),
         y='yhat_upper',
         y2='yhat_lower',
         tooltip=['ds', 'fact', 'yhat_lower', 'yhat_upper']
@@ -114,13 +117,13 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 
         fact = alt.Chart(forecasted[forecasted.anomaly==0]).mark_circle(size=15, opacity=0.7, color = 'Black').encode(
             x='ds:T',
-            y=alt.Y('fact', title='sales'),    
+            y=alt.Y('fact', title='Rating'),    
             tooltip=['ds', 'fact', 'yhat_lower', 'yhat_upper']
         ).interactive()
 
         anomalies = alt.Chart(forecasted[forecasted.anomaly!=0]).mark_circle(size=30, color = 'Red').encode(
             x='ds:T',
-            y=alt.Y('fact', title='sales'),    
+            y=alt.Y('fact', title='Rating'),    
             tooltip=['ds', 'fact', 'yhat_lower', 'yhat_upper'],
             size = alt.Size( 'importance', legend=None)
         ).interactive()
