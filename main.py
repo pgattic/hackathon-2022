@@ -41,28 +41,36 @@ def main_window():
 
 	# Analysis Options (shows after file import)
 	options_layout = [
-		[sg.Checkbox("Prediction Analysis", default=True)],
-		[sg.Checkbox("Outlier Identification", default=True)],
-		[sg.Text("Months to Predict:"), sg.Spin([i for i in range(0, 45)], key="months-spin", size=(4,None), initial_value=1)]
+		[sg.Checkbox("Prediction Analysis", key="p-analysis", default=True)],
+		[sg.Checkbox("Outlier Identification", key="o-id", default=True)],
+		[sg.Text("Months to Predict:"), sg.Spin([i for i in range(0, 45)], key="months-spin", size=(4,None), initial_value=1)],
+		[sg.Text("Accuracy:"), sg.Spin([i for i in range(0, 101)], key="accuracy-spin", size=(4,None), initial_value=90, pad=(0, 0)), sg.Text("%")],
+	]
+
+	outlier_options = [
+		[sg.Checkbox("Separate csv files?", default=True)],
+		[sg.Checkbox("Highlight Data on chart?", default=True)],
 	]
 
 	# Main App Layout
 	layout = [
 		[sg.Menu(menu_def, tearoff=False)],
 		[sg.Text('Browse to a ".csv" file')],
+
 		[sg.Input(key='-FILE-', visible=False, enable_events=True), sg.FileBrowse(file_types=(("Comma Separated Values", "*.csv"),)), sg.Text("Selected File: none", key="file-selected")],
-		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=False)], # MAKE VISIBLE False
-		[sg.Button('Analyze', disabled=True, tooltip="Select a file first!"), sg.Button('Done')],
-		[sg.Text("Ready.", key="message")],
+		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=True), 
+		sg.Frame("Outlier Options:", key="o-options", layout=outlier_options, visible=True)], # MAKE VISIBLE False
+		[sg.Button('Analyze', disabled=True, tooltip="Select a file first!"), sg.Button('Exit')],
 	]
 
-	window = sg.Window("Main", layout, size=(300, 220))
+	window = sg.Window("Main", layout)
 
 	
 	# Event Loop
 	while True:
 		event, values = window.read()
 		print(f'New Event: "{event}"')
+		print(f'New Value: "{values}"')
 		if event == sg.WIN_CLOSED or event == 'Done' or event=="Exit":
 			break
 		elif event == "About...":
@@ -71,8 +79,16 @@ def main_window():
 			window["file-selected"].update(f"Selected File: {os.path.basename(values['-FILE-'])}")
 			window["a-options"].Update(visible=True)
 			window["Analyze"].Update(disabled=False)
+		elif event == "Analyze":
+			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"])
 	window.close()
-	
+
+#analyze_data(str("path/to/data.csv"), bool(prediction_analysis), int(months))
+'''
+def analyze_data(path, prediction_analysis, accuracy, months):
+	print(f"Pathname: {path}\nPredicting? {prediction_analysis}\nHow many months? {months}\nAccuracy? {accuracy}")
+'''
+
 
 main_window()
 
