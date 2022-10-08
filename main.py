@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import os
+from analysis import *
 
 # For compiled version: close the splash screen before running the rest of the code
 try:
@@ -80,7 +81,7 @@ def main_window():
 			window["a-options"].Update(visible=True)
 			window["Analyze"].Update(disabled=False)
 		elif event == "Analyze":
-			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"])
+			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"], 10, True)
 	window.close()
 
 #analyze_data(str("path/to/data.csv"), bool(prediction_analysis), int(months))
