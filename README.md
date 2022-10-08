@@ -9,7 +9,7 @@ Repo for our hackathon 2022 project
 - PyInstaller
 - PySimpleGUI
 - Prophet
-- PyWebView
+- webbrowser
 - Altair
 - Vega_Datasets
 
