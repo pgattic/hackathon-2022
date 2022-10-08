@@ -35,18 +35,20 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
 # blue line is the predicitons 
 # black dots are the real data points
 
-    if prediction_analysis:
-        # building model: interval_width is what acuracy you want the interval to be in
-        # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
+    # building model: interval_width is what acuracy you want the interval to be in
+    # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
 
-        model_formula = Prophet(interval_width=accuracy_of_model)
-        model = model_formula.fit(data_file)
+    model_formula = Prophet(interval_width=accuracy_of_model)
+    model = model_formula.fit(data_file)
+    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
+    forecast = model_formula.predict(future)
+
+    if prediction_analysis:
+
 
         # the predicions of the data you can specify how many periods in advance you would like to predict with predict=
         # you can specify what is the period 'M' month 'D' day 'Y' year
 
-        future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
-        forecast = model_formula.predict(future)
         fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
         fig.gca().set_title("Prediction", size=12)
         fig.show()
