@@ -22,7 +22,9 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # change data from the date columb to become readable in the program
 
     data_file['Date_of_Survey'] = pandas.to_datetime(data_file.Date_of_Survey)
+    
 #print (data_file.dtypes)
+
     data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
 
 
@@ -60,8 +62,6 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # blue line is the predicitons 
 # black dots are the real data points
 
-
-    
     fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
     ax = fig.gca()
     ax.set_title("Prediction", size=12)
@@ -71,11 +71,9 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     
 
 
-# interactive map
-
+# interactive map that is put into browser
 # code from https://towardsdatascience.com/anomaly-detection-time-series-4c661f6f165f
-
-# Change this to match your model
+# Change fit_predict_model to match your model
 
     def fit_predict_model(data_file, interval_width = accuracy_of_model):
         m = Prophet()
@@ -86,9 +84,9 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     
     pred = fit_predict_model(data_file)
 
+
     def detect_anomalies(forecast):
         forecasted = forecast[['ds','trend', 'yhat', 'yhat_lower', 'yhat_upper', 'fact']].copy()
-        #forecast['fact'] = df['y']
 
         forecasted['anomaly'] = 0
         forecasted.loc[forecasted['fact'] > forecasted['yhat_upper'], 'anomaly'] = 1
@@ -104,6 +102,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
         return forecasted
 
     pred = detect_anomalies(pred)
+
 
     def plot_anomalies(forecasted):
         interval = alt.Chart(forecasted).mark_area(interpolate="basis", color = '#7FC97F').encode(
@@ -132,12 +131,20 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
                 .properties(width=870, height=450)\
                 .configure_title(fontSize=20)
               
+              
     chart= plot_anomalies(pred)
-
     chart.save('filename.html')
+
+# red dots are the outliers
+# black is the actual data
+# the blue is the projected range of the values
 
     if anomaly_chart:
         webbrowser.open_new_tab('filename.html')
+        
+        
+
+# output csv of predicted statistics 
 
 def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_periods):
     accuracy_of_model = float(accuracy_of_model)
