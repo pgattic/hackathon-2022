@@ -3,7 +3,7 @@ import pandas
 from prophet import Prophet
 import altair as alt
 import webbrowser
-
+os.makedirs('output', exist_ok=True)
 
 def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_periods, anomaly_chart ):
     accuracy_of_model = float(accuracy_of_model)
@@ -55,10 +55,8 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
 
 # interactive map
 
-    def fit_predict_model(data_file):
-        model_formula = Prophet()
-        model = model_formula.fit(data_file)
-        forecast = model.predict(data_file)
+    def fit_predict_model(data_file, interval_width = accuracy_of_model):
+        forecast = model_formula.predict(future)
         forecast['fact'] = data_file['y'].reset_index(drop = True)
         return forecast
     
@@ -144,9 +142,9 @@ def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     ds.to_csv('output/data.csv')
  
  
- # this is another HTML interactive chart
+ # this is another HTML interactive chart if you would like to use it
  
-def prediction_html(csv_path, accuracy_of_model, number_of_periods, prediction_chart):
+'''def prediction_html(csv_path, accuracy_of_model, number_of_periods, prediction_chart, print):
     
     accuracy_of_model = float(accuracy_of_model)
     number_of_periods = int(number_of_periods) 
@@ -204,9 +202,11 @@ def prediction_html(csv_path, accuracy_of_model, number_of_periods, prediction_c
         return alt.layer(interval, fact)\
                   .properties(width=870, height=450)\
                   .configure_title(fontSize=20)
-    
+    if print:
+        plot_a(interactive_pred)
+        interactive_pred.save('anomalies.html')
     
     if prediction_chart:
         plot_a(interactive_pred)
-        interactive_pred.save('anomalies.html')
-        webbrowser.open_new_tab('anomalies.html')          
+        interactive_pred.save('output/anomalies.html')
+        webbrowser.open_new_tab('predicted.html')     '''     
