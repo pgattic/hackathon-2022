@@ -9,7 +9,7 @@ from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
 
-def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_periods, how_many_lines_of_code, anomaly_chart ):
+def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_periods, technical_statistics, anomaly_chart ):
     accuracy_of_model = float(accuracy_of_model)
     number_of_periods = int(number_of_periods)
     how_many_lines_of_code = int(how_many_lines_of_code) 
@@ -51,8 +51,8 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 
 # Show all analisis of the data and the predictions
 # you can also start at the biggining with forecast.head()
-
-    print(forecast.tail(how_many_lines_of_code))
+    if technical_statistics:
+        print(forecast.tail(number_of_periods))
 
 # this clears up the data and only shows the preditions and dates
 
