@@ -61,9 +61,12 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # black dots are the real data points
 
 
-    plot1 = model_formula.plot(forecast)
+    
+    fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
+    ax = fig.gca()
+    ax.set_title("Prediction", size=12)
     if prediction_analysis:
-        plot1.show("BRyant")
+        fig.show()
         
     
 
