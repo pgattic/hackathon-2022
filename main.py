@@ -23,7 +23,6 @@ info_icon = b"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABd1BMVEUAAABkqt0Lcr
 dark_color = "#C0DBE5"
 
 # About Us Window
-
 def about_window():
 	layout = [
 		[sg.Text("2022 - Made with love by Team Fresh Meat")],
