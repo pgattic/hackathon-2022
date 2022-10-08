@@ -10,6 +10,10 @@ import altair as alt
 import webbrowser
 
 
+accuracy_of_model = float(input())
+accuracy_of_model = accuracy_of_model / 100
+#periods_into_future = 
+
 # Connet and read data in CSV
 
 load_csv = 'fake_data.csv'
@@ -35,7 +39,7 @@ data_file.columns = ['y', 'ds']
 # building model: interval_width is what acuracy you want the interval to be in
 # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
 
-model_formula = Prophet(interval_width=0.90)
+model_formula = Prophet(interval_width=margin_of_error)
 model = model_formula.fit(data_file)
 
 # the predicions of the data you can specify how many periods in advance you would like to predict with predict=
@@ -51,7 +55,7 @@ forecast = model_formula.predict(future)
 
 # this clears up the data and only shows the preditions and dates
 
-print(forecast[['ds','yhat']]) 
+#print(forecast[['ds','yhat']]) 
 
 # shaded blue is the bounding box of the predictions
 # blue line is the predicitons 
@@ -59,7 +63,9 @@ print(forecast[['ds','yhat']])
 
 
 plot1 = model_formula.plot(forecast)
-#plot1.show()
+prediction = plot1.show()
+
+
 
 
 # interactive map
@@ -68,7 +74,7 @@ plot1 = model_formula.plot(forecast)
 
 # Change this to match your model
 
-def fit_predict_model(data_file, interval_width = 0.60, daily_seasonality=True):
+def fit_predict_model(data_file, interval_width = margin_of_error, daily_seasonality=True):
     m = Prophet()
     m = m.fit(data_file)
     forecast = m.predict(data_file)
@@ -128,4 +134,5 @@ chart= plot_anomalies(pred)
 chart.save('filename.html')
 
 
-webbrowser.open_new_tab('filename.html')
+anomaly_chart = webbrowser.open_new_tab('filename.html')
+
