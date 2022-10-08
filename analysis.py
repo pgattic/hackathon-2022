@@ -1,9 +1,10 @@
 # Python
 
 # imports
-import os
+
 import pandas
-from prophet import Prophet
+from prophet import *
+import matplotlib
 from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
@@ -44,7 +45,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # the predicions of the data you can specify how many periods in advance you would like to predict with predict=
 # you can specify what is the period 'M' month 'D' day 'Y' year
 
-    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
+    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='D')
     forecast = model_formula.predict(future)
 
 # Show all analisis of the data and the predictions
@@ -63,7 +64,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 
     plot1 = model_formula.plot(forecast)
     if prediction_analysis:
-        plot1.show("BRyant")
+        plot1.show()
         
     
 
@@ -136,26 +137,3 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     if anomaly_chart:
         webbrowser.open_new_tab('filename.html')
 
-def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_periods):
-    accuracy_of_model = float(accuracy_of_model)
-    number_of_periods = int(number_of_periods) 
-    
-    data_file = pandas.read_csv(load_csv)
-    
-    data_file['Date_of_Survey'] = pandas.to_datetime(data_file.Date_of_Survey)
-    data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
-    data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
-    data_file.columns = ['y', 'ds']
-    
-    model_formula = Prophet(interval_width=accuracy_of_model)
-    model = model_formula.fit(data_file)
-    
-    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
-    forecast = model_formula.predict(future)
-    
-    if technical_statistics:
-        ds = forecast.tail(number_of_periods)
-        ds.to_csv(index=False)
-        os.makedirs('output', exist_ok=True)  
-        ds.to_csv('output/data.csv')
-        

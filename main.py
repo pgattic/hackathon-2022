@@ -2,7 +2,8 @@ import PySimpleGUI as sg
 import os
 from analysis import *
 import pandas
-from prophet import Prophet
+from prophet import *
+import matplotlib
 from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
@@ -53,6 +54,10 @@ def main_window():
 		[sg.Text("Accuracy:"), sg.Spin([i for i in range(0, 101)], key="accuracy-spin", size=(4,None), initial_value=90, pad=(0, 0)), sg.Text("%")],
 	]
 
+	outlier_options = [
+		[sg.Checkbox("Separate csv files?", default=True)],
+		[sg.Checkbox("Highlight Data on chart?", default=True)],
+	]
 
 	# Main App Layout
 	layout = [
@@ -60,38 +65,29 @@ def main_window():
 		[sg.Text('Browse to a ".csv" file')],
 
 		[sg.Input(key='-FILE-', visible=False, enable_events=True), sg.FileBrowse(file_types=(("Comma Separated Values", "*.csv"),)), sg.Text("Selected File: none", key="file-selected")],
-		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=False)], # MAKE VISIBLE False
-		[sg.Button('Display Plots', disabled=True), sg.Button("Export Prediction Data as csv", key="ex-csv", disabled=True)],
-		[sg.Text("Ready to load data.", key="status")]
+		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=True), 
+		sg.Frame("Outlier Options:", key="o-options", layout=outlier_options, visible=True)], # MAKE VISIBLE False
+		[sg.Button('Analyze', disabled=True, tooltip="Select a file first!"), sg.Button('Exit')],
 	]
 
 	window = sg.Window("Main", layout)
 
-	def status(state):
-		window["status"].update(state)
-
+	
 	# Event Loop
 	while True:
 		event, values = window.read()
 		print(f'New Event: "{event}"')
 		print(f'New Value: "{values}"')
-		if event == sg.WIN_CLOSED or event=="Exit":
+		if event == sg.WIN_CLOSED or event == 'Done' or event=="Exit":
 			break
 		elif event == "About...":
 			about_window()
 		elif event == "-FILE-":
 			window["file-selected"].update(f"Selected File: {os.path.basename(values['-FILE-'])}")
 			window["a-options"].Update(visible=True)
-			window["Display Plots"].Update(disabled=False)
-			window["ex-csv"].Update(disabled=False)
-			status(f"Successfully loaded {os.path.basename(values['-FILE-'])}.")
-		elif event == "Display Plots":
+			window["Analyze"].Update(disabled=False)
+		elif event == "Analyze":
 			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"], False, True)
-		elif event == "ex-csv":
-			status("Exporting...")
-			technical_data(values['-FILE-'], True, int(values["accuracy-spin"])/100, int(values["months-spin"]))
-			status(f'Data saved to "output/data.csv".')
-
 	window.close()
 
 #analyze_data(str("path/to/data.csv"), bool(prediction_analysis), int(months))
