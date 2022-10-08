@@ -1,23 +1,18 @@
-# Python
-
-# imports
 import os
 import pandas
 from prophet import Prophet
-from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
 
-def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_periods, technical_statistics, anomaly_chart ):
+
+def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_periods, anomaly_chart ):
     accuracy_of_model = float(accuracy_of_model)
     number_of_periods = int(number_of_periods) 
 
 
 # Connet and read data in CSV
 
-#load_csv = 'hackathonrawdata2.csv'
-
-    data_file = pandas.read_csv(load_csv)
+    data_file = pandas.read_csv(csv_path)
 
 # change data from the date columb to become readable in the program
 
@@ -26,66 +21,46 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
 
 
-# droping columbs that we aren't going to use
+# dropping columns that we aren't going to use
 
     data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
     data_file.columns = ['y', 'ds']
 
 # now we have two columbs which we need to work with prophet
 
-#print(data_file.head())
-
-# building model: interval_width is what acuracy you want the interval to be in
-# you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
-
-    model_formula = Prophet(interval_width=accuracy_of_model)
-    model = model_formula.fit(data_file)
-
-# the predicions of the data you can specify how many periods in advance you would like to predict with predict=
-# you can specify what is the period 'M' month 'D' day 'Y' year
-
-    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
-    forecast = model_formula.predict(future)
-
-# Show all analisis of the data and the predictions
-# you can also start at the biggining with forecast.head()
-    if technical_statistics:
-        print(forecast.tail(number_of_periods))
-
-# this clears up the data and only shows the preditions and dates
-
-#print(forecast[['ds','yhat']]) 
 
 # shaded blue is the bounding box of the predictions
 # blue line is the predicitons 
 # black dots are the real data points
 
 
-    
-    fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
-    ax = fig.gca()
-    ax.set_title("Prediction", size=12)
     if prediction_analysis:
+        # building model: interval_width is what acuracy you want the interval to be in
+        # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
+
+        model_formula = Prophet(interval_width=accuracy_of_model)
+        model = model_formula.fit(data_file)
+
+        # the predicions of the data you can specify how many periods in advance you would like to predict with predict=
+        # you can specify what is the period 'M' month 'D' day 'Y' year
+
+        future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
+        forecast = model_formula.predict(future)
+        fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
+        fig.gca().set_title("Prediction", size=12)
         fig.show()
-        
-    
+
 
 
 # interactive map
 
-# code from https://towardsdatascience.com/anomaly-detection-time-series-4c661f6f165f
-
-# Change this to match your model
-
-    def fit_predict_model(data_file, interval_width = accuracy_of_model):
-        m = Prophet()
-        m = m.fit(data_file)
-        forecast = m.predict(data_file)
+    def fit_predict_model(data_file):
+        model_formula = Prophet()
+        model = model_formula.fit(data_file)
+        forecast = model.predict(data_file)
         forecast['fact'] = data_file['y'].reset_index(drop = True)
         return forecast
     
-    pred = fit_predict_model(data_file)
-
     def detect_anomalies(forecast):
         forecasted = forecast[['ds','trend', 'yhat', 'yhat_lower', 'yhat_upper', 'fact']].copy()
         #forecast['fact'] = df['y']
@@ -103,7 +78,6 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     
         return forecasted
 
-    pred = detect_anomalies(pred)
 
     def plot_anomalies(forecasted):
         interval = alt.Chart(forecasted).mark_area(interpolate="basis", color = '#7FC97F').encode(
@@ -132,18 +106,19 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
                 .properties(width=870, height=450)\
                 .configure_title(fontSize=20)
               
-    chart= plot_anomalies(pred)
-
-    chart.save('filename.html')
 
     if anomaly_chart:
-        webbrowser.open_new_tab('filename.html')
+        pred = fit_predict_model(data_file)
+        pred = detect_anomalies(pred)
+        chart = plot_anomalies(pred)
+        chart.save('anomalies.html')
+        webbrowser.open_new_tab('anomalies.html')
 
-def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_periods):
+def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     accuracy_of_model = float(accuracy_of_model)
     number_of_periods = int(number_of_periods) 
     
-    data_file = pandas.read_csv(load_csv)
+    data_file = pandas.read_csv(csv_path)
     
     data_file['Date_of_Survey'] = pandas.to_datetime(data_file.Date_of_Survey)
     data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
@@ -156,9 +131,10 @@ def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_
     future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
     forecast = model_formula.predict(future)
     
-    if technical_statistics:
-        ds = forecast.tail(number_of_periods)
-        ds.to_csv(index=False)
-        os.makedirs('output', exist_ok=True)  
-        ds.to_csv('output/data.csv')
+    # Output all analyses of the data and the predictions
+    # you can also start at the biggining with forecast.head()
+    ds = forecast.tail(number_of_periods)
+    ds.to_csv(index=False)
+    os.makedirs('output', exist_ok=True)  
+    ds.to_csv('output/data.csv')
         
