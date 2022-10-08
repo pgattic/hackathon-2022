@@ -12,20 +12,27 @@ try:
 	import pyi_splash
 	pyi_splash.close()
 except:
-	print("Running with interpreter! No splash Screen!")
+	print("Running with interpreter - No splash screen")
 
-sg.theme('BlueMono')
+sg.theme('LightBlue')
 
+app_icon = b"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAS1BMVEXm5uZ2QprlsTUAAACffraAUKHlw3Lk4+TlvV/lszrDss63ocbDw8Pl2sGzs7OVcK/l1a2FWKXm0qKenp6UlJTlyol7e3vlv2RYWFh6/RVIAAABGUlEQVRYw+3SS44CMQwE0IrTDMz/P8P9T4p6gcp0HOw4O0TtuqV6iuPgnpuPnJPt3wG8OkBqCyJzAD9yAL9ygEhW2HiSA0QlA8gE8L/tywPaPJfSEwA8inuCssYGov01iw14dQKlvBuAVyewneMgm/z2+zp7HsEfnoCOCQBRgIRbJ2AT6unEAaa5hKjAEAgqvuCPtDRTmPHvhAKGgb25zjhgP6nsowRsIryITzCDffAILREZnkBLHPzTowPgawVC/ScN6HwE+jv1B8Fc9hPATg+QAaD6IeCnK/DzilBrRUdAAKhrYAtwAAowBYSBIzqJjfAythU2eYPDAEf/Zj8DVMT6CwHV1xscu0SO/sZ+OOxPZb7/NwvgJnMCQwkIBRnsbfoAAAAASUVORK5CYII="
+
+info_icon = b"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABd1BMVEUAAABkqt0LcrMZeb0OcbUIZ68CX6F4vuUGYKQOcbd1wuyT0PN3w+weg8Gp3vpRqNlDndMggsCU0O6r3/ZQp9lHn9FcsN84ls3L6fiFyOtcsN84lcwEWZmAxesDW599xOwPc7Z1weVmueZ2v+QPcLYujcaLyunf8flptuMYebwHTIgvjskJa6wXertqt+QFKlBlptMogL9ruOHO7Pkogb8MVJIAAAF1wekFaLBGodY5mM8rjccXebsPcbf5//+O0fOFyu1ru+ZpuuVDn9Wc2PfG5PGR0u+Cye13w+qJxeZhtOFfs+FTqds1lc4wj8kggsH8/v7i8vea1vaR0PLN5PGCyvFou+hZsuOBvuBcsd9OqNuGutpPqdlGmsw4lswqisYihMPy+/3x9/rv9vrs9Pjn8/ij2vbA4POy2/GY0vGm1u6z2euhyuZvveV1veSIvuB3u99Uqt1Tq9uDuddWqtdLotZBn9Q8l81GkscjhcMgfrwmfLshe7uj7mZLAAAAN3RSTlMADAb+/uXGg2X68u7t7ezr6ufi4dza0crBwb+5sayloZeUj4yLhYKBfn5+dW9tOTAuLCsqIBUF7K+CWQAAAPBJREFUGNMlyOVig0AQBOBNGqu7u7sL5Y5ACe5xt7q7y8P3IN/+2JkB1+7iUG/PcHgLGnwLHRdiUhSTrbM+r09yHCfLqWs5xY27SzijHBE3Z5KiZKYBdtooilJV9Sp+SULLBixlYzy5B0275/lYdgZGcgXD0PPpE0nXjUJuAPqKRfPlSbtlJfPZLJc7oV8QBPr97Tyep2la+OiCUcuqIvTIJmiEUNUahFWMsW2n2bvKp41xbR72up36d+WUfS3V6o7Tvg2w3sQwX8eJ0g/5zDIA+OeaA9HfvygRmPKDu0SCh57gGume/chEKDS2snlA8j80CzZ9UaG16wAAAABJRU5ErkJggg=="
+
+dark_color = "#C0DBE5"
 
 # About Us Window
 
 def about_window():
 	layout = [
-		[sg.Text("Made with love by the hackathon group Fresh Meat", justification='center')],
-#		[sg.Image(source="img/icon-64x64.png")],
-		[sg.Text("For Home Care Pulse", justification='center')],
+		[sg.Text("2022 - Made with love by Team Fresh Meat")],
+		[sg.Image(source="img/us.png")],
+		[sg.Text("For Home Care Pulse")],
+		[sg.Text("Usage:")],
+		[sg.Text("Browse for the .csv file to be analyzed")],
 	]
-	window = sg.Window('About', layout)
+	window = sg.Window('About', layout, icon=info_icon, element_justification="center")
 	# Event Loop to process "events" and get the "values" of the inputs
 	while True:
 		event, values = window.read()
@@ -39,33 +46,27 @@ def about_window():
 # Main Front Window
 
 def main_window():
-	menu_def = [
-		["&File", ["&Import CSV", "E&xit"]],
-		["&Help", ["&About..."]],
-	]
-
 
 	# Analysis Options (shows after file import)
 	options_layout = [
-		[sg.Checkbox("Prediction Analysis", key="p-analysis", default=True)],
-		[sg.Checkbox("Anomaly Detection", key="o-id", default=True)],
-		[sg.Text("Months to Predict:"), sg.Spin([i for i in range(0, 45)], key="months-spin", size=(4,None), initial_value=1)],
-		[sg.Text("Accuracy:"), sg.Spin([i for i in range(0, 101)], key="accuracy-spin", size=(4,None), initial_value=90, pad=(0, 0)), sg.Text("%")],
+		[sg.Checkbox("Prediction Analysis", key="p-analysis", default=True, background_color=dark_color)],
+		[sg.Checkbox("Anomaly Detection", key="o-id", default=True, background_color=dark_color)],
+		[sg.Text("Months to Predict:", background_color=dark_color), sg.Spin([i for i in range(0, 45)], key="months-spin", size=(4,None), initial_value=1, background_color="#E3F2FD")],
+		[sg.Text("Accuracy:", background_color=dark_color), sg.Spin([i for i in range(0, 101)], key="accuracy-spin", size=(4,None), initial_value=90, pad=(0, 0), background_color="#E3F2FD"), sg.Text("%", background_color=dark_color)],
 	]
 
 
 	# Main App Layout
 	layout = [
-		[sg.Menu(menu_def, tearoff=False)],
-		[sg.Text('Browse to a ".csv" file')],
+		[sg.Text('Browse to a ".csv" file'), sg.Button("", button_color="#E3F2FD", image_data=info_icon, size=(16,16),key="info")],
 
 		[sg.Input(key='-FILE-', visible=False, enable_events=True), sg.FileBrowse(file_types=(("Comma Separated Values", "*.csv"),)), sg.Text("Selected File: none", key="file-selected")],
-		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=False)], # MAKE VISIBLE False
-		[sg.Button('Display Plots', disabled=True), sg.Button("Export Prediction Data as csv", key="ex-csv", disabled=True)],
+		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=False, background_color=dark_color, relief="flat")], # MAKE VISIBLE False
+		[sg.Button('Display Plots', disabled=True, border_width = 0), sg.Button("Export Prediction Data as csv", key="ex-csv", disabled=True)],
 		[sg.Text("Ready to load data.", key="status")]
 	]
 
-	window = sg.Window("Main", layout, icon=b"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANQSURBVGhD7ZlNaBNBFMd3I1i00VoRQW+SeggePHkQQRCsBxW8VMhBKQY/LvHjJELvHkRL/Sh68FL0HJFojfTgIYKIUawI4qGgIEH05MGL0sTXzHNcd3dm3nxkdwP5UdI3Syj/3857s2nrt1otr5/J4fe+ZSCQNgOBtOl7gZ4co51XR7CK4O96iJUj3O+AJH0vGMxA2gwEohSvYpEI7gX8/Has9IEDQPcMyFAL8ehaDlkRCIWmO2RCIDYu0aEnAlqPW0lQikPKO6CMqHxDmgLEJpGTrMD6nVjopO8sXcMqDtmn0cWFT8/m3kNx4f5hdkWLaEQ+G53XR732L1YrkU+UbAdYemDm2CP4YrU97eaEq/SAUCCaGK48mX2DCwv8zm+spEB0ymmmNwMfX7RA48GVl7jWh9L6xOgMkyH+/O47qaPyRSz+ok6/ZYIenRE/xPSOPzd3MLdKeBe0Dkrd6AyTHQhyY3KebitCq2dC2AowwMFMwyY6w40AQ09j417L6AzbGRDBn330MTDzET6J7R0A0NCa4yBEH+oftox9bByCdEb35MYu4iIAVSDE0ztvPzz/ggspBr0kInZPDAVCyPcn+FnQRiNWwPYUWl5ua3UXhDAbVhFWAhD95uQ8LnRwqGEoANGNx5rjREN7Bgxyj2wePjG9DxcClLMhUtXbAUr64Mgyfnz7iZUY492gChB7JppeC6FGfgcWEdQCxOiAZXrOisa2s7jo4hcvYxVBIUCMDvD0S82vrLBi0/6VrRi7BKW8tWQC9PRr1q3GyvNqM02sAtB/VBB/dLc8PSATILbE8IahM7cP4CJxFC20dmQIKzGnbo1jlQYKgdOzinCuBpdOtVrFqotCAJBE1EpvNgZBtnapVCq47qIWAGKDJnnvWXRc/A9JAAjFTTI9IPm8QxUAeOiE04colUpYdXHzC00QSa+fv3fI931c6MD6p9FoFAoFdoWjsQP2XD/+GCsx0V7nV6LpgUQFlLCs8MpD1+t1Vog6JVsCQZhDuVyGVzdDTGHh7iJW+rDEkJXH5fsgwbHA+Ml//wWLIjm+QlnBoVar8ZoVsbg/hQzg6Q3CZGgGzG5l+gLs9k9NTbGlLum3EJ9dttQlEzNgQ3afA0T6XMDz/gBX5jybxDgl3QAAAABJRU5ErkJggg==")
+	window = sg.Window("Main", layout, icon=app_icon, element_justification="center")
 
 	def status(state):
 		window["status"].update(state)
@@ -77,7 +78,7 @@ def main_window():
 		print(f'New Value: "{values}"')
 		if event == sg.WIN_CLOSED or event=="Exit":
 			break
-		elif event == "About...":
+		elif event == "info":
 			about_window()
 		elif event == "-FILE-":
 			window["file-selected"].update(f"Selected File: {os.path.basename(values['-FILE-'])}")
