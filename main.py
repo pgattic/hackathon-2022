@@ -81,7 +81,7 @@ def main_window():
 			window["a-options"].Update(visible=True)
 			window["Analyze"].Update(disabled=False)
 		elif event == "Analyze":
-			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"], 10, True)
+			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"], False, True)
 	window.close()
 
 #analyze_data(str("path/to/data.csv"), bool(prediction_analysis), int(months))
