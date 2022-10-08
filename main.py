@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import os
 from analysis import *
+from base64img import *
 
 # For compiled version: close the splash screen before running the rest of the code
 try:
@@ -11,10 +12,6 @@ except:
 
 
 # Define Icons (gotta be in base64)
-
-app_icon = b"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAS1BMVEXm5uZ2QprlsTUAAACffraAUKHlw3Lk4+TlvV/lszrDss63ocbDw8Pl2sGzs7OVcK/l1a2FWKXm0qKenp6UlJTlyol7e3vlv2RYWFh6/RVIAAABGUlEQVRYw+3SS44CMQwE0IrTDMz/P8P9T4p6gcp0HOw4O0TtuqV6iuPgnpuPnJPt3wG8OkBqCyJzAD9yAL9ygEhW2HiSA0QlA8gE8L/tywPaPJfSEwA8inuCssYGov01iw14dQKlvBuAVyewneMgm/z2+zp7HsEfnoCOCQBRgIRbJ2AT6unEAaa5hKjAEAgqvuCPtDRTmPHvhAKGgb25zjhgP6nsowRsIryITzCDffAILREZnkBLHPzTowPgawVC/ScN6HwE+jv1B8Fc9hPATg+QAaD6IeCnK/DzilBrRUdAAKhrYAtwAAowBYSBIzqJjfAythU2eYPDAEf/Zj8DVMT6CwHV1xscu0SO/sZ+OOxPZb7/NwvgJnMCQwkIBRnsbfoAAAAASUVORK5CYII="
-
-info_icon = b"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABd1BMVEUAAABkqt0LcrMZeb0OcbUIZ68CX6F4vuUGYKQOcbd1wuyT0PN3w+weg8Gp3vpRqNlDndMggsCU0O6r3/ZQp9lHn9FcsN84ls3L6fiFyOtcsN84lcwEWZmAxesDW599xOwPc7Z1weVmueZ2v+QPcLYujcaLyunf8flptuMYebwHTIgvjskJa6wXertqt+QFKlBlptMogL9ruOHO7Pkogb8MVJIAAAF1wekFaLBGodY5mM8rjccXebsPcbf5//+O0fOFyu1ru+ZpuuVDn9Wc2PfG5PGR0u+Cye13w+qJxeZhtOFfs+FTqds1lc4wj8kggsH8/v7i8vea1vaR0PLN5PGCyvFou+hZsuOBvuBcsd9OqNuGutpPqdlGmsw4lswqisYihMPy+/3x9/rv9vrs9Pjn8/ij2vbA4POy2/GY0vGm1u6z2euhyuZvveV1veSIvuB3u99Uqt1Tq9uDuddWqtdLotZBn9Q8l81GkscjhcMgfrwmfLshe7uj7mZLAAAAN3RSTlMADAb+/uXGg2X68u7t7ezr6ufi4dza0crBwb+5sayloZeUj4yLhYKBfn5+dW9tOTAuLCsqIBUF7K+CWQAAAPBJREFUGNMlyOVig0AQBOBNGqu7u7sL5Y5ACe5xt7q7y8P3IN/+2JkB1+7iUG/PcHgLGnwLHRdiUhSTrbM+r09yHCfLqWs5xY27SzijHBE3Z5KiZKYBdtooilJV9Sp+SULLBixlYzy5B0275/lYdgZGcgXD0PPpE0nXjUJuAPqKRfPlSbtlJfPZLJc7oV8QBPr97Tyep2la+OiCUcuqIvTIJmiEUNUahFWMsW2n2bvKp41xbR72up36d+WUfS3V6o7Tvg2w3sQwX8eJ0g/5zDIA+OeaA9HfvygRmPKDu0SCh57gGume/chEKDS2snlA8j80CzZ9UaG16wAAAABJRU5ErkJggg=="
 
 
 sg.theme('LightBlue')
@@ -34,7 +31,7 @@ def about_window():
 	layout = [
 		[sg.Text("Home Care Analysis - 2022")],
 		[sg.Text("Made with love by Team Fresh Meat")],
-		[sg.Image(source="img/us.png")],
+		[sg.Image(data=us_img)],
 		[sg.Text("For Home Care Pulse")],
 		[sg.Text("Usage:")],
 		[sg.Text("Browse for the .csv file to be analyzed,")],
