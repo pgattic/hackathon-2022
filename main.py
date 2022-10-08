@@ -1,6 +1,12 @@
 import PySimpleGUI as sg
 import os
 from analysis import *
+import pandas
+from prophet import *
+import matplotlib
+from vega_datasets import data as vega_data
+import altair as alt
+import webbrowser
 
 # For compiled version: close the splash screen before running the rest of the code
 try:
