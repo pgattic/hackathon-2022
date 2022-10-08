@@ -3,7 +3,7 @@ import pandas
 from prophet import Prophet
 import altair as alt
 import webbrowser
-
+os.makedirs('output', exist_ok=True)
 
 def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_periods, anomaly_chart ):
     accuracy_of_model = float(accuracy_of_model)
@@ -55,10 +55,8 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
 
 # interactive map
 
-    def fit_predict_model(data_file):
-        model_formula = Prophet()
-        model = model_formula.fit(data_file)
-        forecast = model.predict(data_file)
+    def fit_predict_model(data_file, interval_width = accuracy_of_model):
+        forecast = model_formula.predict(future)
         forecast['fact'] = data_file['y'].reset_index(drop = True)
         return forecast
     
@@ -142,4 +140,73 @@ def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     ds.to_csv(index=False)
     os.makedirs('output', exist_ok=True)  
     ds.to_csv('output/data.csv')
-        
+ 
+ 
+ # this is another HTML interactive chart if you would like to use it
+ 
+'''def prediction_html(csv_path, accuracy_of_model, number_of_periods, prediction_chart, print):
+    
+    accuracy_of_model = float(accuracy_of_model)
+    number_of_periods = int(number_of_periods) 
+    
+    data_file = pandas.read_csv(csv_path)
+    
+    data_file['Date_of_Survey'] = pandas.to_datetime(data_file.Date_of_Survey)
+    data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
+    data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
+    data_file.columns = ['y', 'ds']
+    
+    model_formula = Prophet(interval_width=accuracy_of_model)
+    model = model_formula.fit(data_file)
+    
+    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
+    forecast = model_formula.predict(future)
+    
+    
+    
+    def fit_predict_model(data_file, interval_width = accuracy_of_model):
+        forecast = model_formula.predict(future)
+        forecast['fact'] = data_file['y'].reset_index(drop = True)
+        return forecast
+    
+    interactive_pred = fit_predict_model(data_file)
+
+    def detect(forecast):
+        forecasted = forecast[['ds','trend', 'yhat', 'yhat_lower', 'yhat_upper', 'fact']].copy()
+        #forecast['fact'] = df['y']
+
+        forecasted['mean'] = 0
+        forecasted.loc[forecasted['fact'] > forecasted['yhat_upper'], 'mean'] = 1
+        forecasted.loc[forecasted['fact'] < forecasted['yhat_lower'], 'mean'] = -1
+
+        return forecasted
+
+    interactive_pred = detect(interactive_pred)
+
+    def plot_a(forecasted):
+        interval = alt.Chart(forecasted).mark_area(interpolate="basis", color = '#7FC97F').encode(
+        x=alt.X('ds:T',  title ='Date of Survey'),
+        y='yhat_upper',
+        y2='yhat_lower',
+        tooltip=['ds', 'fact', 'yhat_lower', 'yhat_upper']
+        ).interactive().properties(
+            title='Prediction'
+        )
+
+        fact = alt.Chart(forecasted).mark_circle(size=15, opacity=0.7, color = 'Black').encode(
+            x='ds:T',
+            y=alt.Y('fact', title='Rating'),    
+            tooltip=['ds', 'fact', 'yhat_lower', 'yhat_upper']
+        ).interactive()
+
+        return alt.layer(interval, fact)\
+                  .properties(width=870, height=450)\
+                  .configure_title(fontSize=20)
+    if print:
+        plot_a(interactive_pred)
+        interactive_pred.save('anomalies.html')
+    
+    if prediction_chart:
+        plot_a(interactive_pred)
+        interactive_pred.save('output/anomalies.html')
+        webbrowser.open_new_tab('predicted.html')     '''     
