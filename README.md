@@ -1,6 +1,10 @@
-# Hackathon 2022
+# Home Care Analysis
+
+For Home Care Pulse
 
 Repo for our hackathon 2022 project
+
+Made with ❤️ by Team Fresh Meat
 
 # Requirements
 
