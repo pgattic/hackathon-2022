@@ -136,14 +136,14 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
     if anomaly_chart:
         webbrowser.open_new_tab('filename.html')
 
-def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_periods)
+def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_periods):
     accuracy_of_model = float(accuracy_of_model)
     number_of_periods = int(number_of_periods) 
     
     data_file = pandas.read_csv(load_csv)
     
     data_file['Date_of_Survey'] = pandas.to_datetime(data_file.Date_of_Survey)
-    
+    data_file['ds'] = pandas.DatetimeIndex(data_file['Date_of_Survey'])
     data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
     data_file.columns = ['y', 'ds']
     
@@ -156,6 +156,6 @@ def technical_data(load_csv, technical_statistics, accuracy_of_model, number_of_
     if technical_statistics:
         ds = forecast.tail(number_of_periods)
         ds.to_csv(index=False)
-        os.makedirs('Technical Statistics/Output', exist_ok=True)  
-        ds.to_csv('Technical Statistics/output.csv')
+        os.makedirs('output', exist_ok=True)  
+        ds.to_csv('output/data.csv')
         

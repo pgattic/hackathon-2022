@@ -61,12 +61,14 @@ def main_window():
 
 		[sg.Input(key='-FILE-', visible=False, enable_events=True), sg.FileBrowse(file_types=(("Comma Separated Values", "*.csv"),)), sg.Text("Selected File: none", key="file-selected")],
 		[sg.Frame("Analysis Options:", key="a-options", layout=options_layout, visible=False)], # MAKE VISIBLE False
-		[sg.Button('Display Plots', disabled=True), sg.Button("Export Prediction Data as csv", key="ex-csv")],
+		[sg.Button('Display Plots', disabled=True), sg.Button("Export Prediction Data as csv", key="ex-csv", disabled=True)],
 		[sg.Text("Ready to load data.", key="status")]
 	]
 
 	window = sg.Window("Main", layout)
 
+	def status(state):
+		window["status"].update(state)
 
 	# Event Loop
 	while True:
@@ -81,11 +83,15 @@ def main_window():
 			window["file-selected"].update(f"Selected File: {os.path.basename(values['-FILE-'])}")
 			window["a-options"].Update(visible=True)
 			window["Display Plots"].Update(disabled=False)
-			window["status"].update(f"Successfully loaded {os.path.basename(values['-FILE-'])}.")
+			window["ex-csv"].Update(disabled=False)
+			status(f"Successfully loaded {os.path.basename(values['-FILE-'])}.")
 		elif event == "Display Plots":
 			analyze_data(values['-FILE-'],values["p-analysis"], int(values["accuracy-spin"])/100, values["months-spin"], False, True)
 		elif event == "ex-csv":
+			status("Exporting...")
 			technical_data(values['-FILE-'], True, int(values["accuracy-spin"])/100, int(values["months-spin"]))
+			status(f'Data saved to "output/data.csv".')
+
 	window.close()
 
 #analyze_data(str("path/to/data.csv"), bool(prediction_analysis), int(months))
