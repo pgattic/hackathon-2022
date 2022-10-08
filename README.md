@@ -11,6 +11,7 @@ Repo for our hackathon 2022 project
 - Prophet
 - PyWebView
 - Altair
+- Vega_Datasets
 
 # Contributors
 
