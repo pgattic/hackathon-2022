@@ -11,8 +11,7 @@ import webbrowser
 
 def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_periods, technical_statistics, anomaly_chart ):
     accuracy_of_model = float(accuracy_of_model)
-    number_of_periods = int(number_of_periods)
-    how_many_lines_of_code = int(how_many_lines_of_code) 
+    number_of_periods = int(number_of_periods) 
 
 
 # Connet and read data in CSV
