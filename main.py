@@ -2,8 +2,7 @@ import PySimpleGUI as sg
 import os
 from analysis import *
 import pandas
-from prophet import *
-import matplotlib
+from prophet import Prophet
 from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
