@@ -3,8 +3,7 @@
 # imports
 
 import pandas
-from prophet import *
-import matplotlib
+from prophet import Prophet
 from vega_datasets import data as vega_data
 import altair as alt
 import webbrowser
@@ -45,7 +44,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 # the predicions of the data you can specify how many periods in advance you would like to predict with predict=
 # you can specify what is the period 'M' month 'D' day 'Y' year
 
-    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='D')
+    future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
     forecast = model_formula.predict(future)
 
 # Show all analisis of the data and the predictions
@@ -64,7 +63,7 @@ def analyze_data(load_csv, prediction_analysis, accuracy_of_model, number_of_per
 
     plot1 = model_formula.plot(forecast)
     if prediction_analysis:
-        plot1.show()
+        plot1.show("BRyant")
         
     
 
