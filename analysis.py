@@ -35,13 +35,6 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
 # blue line is the predicitons 
 # black dots are the real data points
 
-<<<<<<< HEAD
-
-=======
-    fig = model.plot(forecast, xlabel='Date of Survey', ylabel='Rating')
-    ax = fig.gca()
-    ax.set_title("Prediction", size=12)
->>>>>>> 964a881b1e9f704668fc4d23432033b2e2c6279d
     if prediction_analysis:
         # building model: interval_width is what acuracy you want the interval to be in
         # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
@@ -60,7 +53,6 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
 
 
 
-<<<<<<< HEAD
 # interactive map
 
     def fit_predict_model(data_file):
@@ -70,22 +62,6 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
         forecast['fact'] = data_file['y'].reset_index(drop = True)
         return forecast
     
-=======
-# interactive map that is put into browser
-# code from https://towardsdatascience.com/anomaly-detection-time-series-4c661f6f165f
-# Change fit_predict_model to match your model
-
-    def fit_predict_model(data_file, interval_width = accuracy_of_model):
-        m = Prophet()
-        m = m.fit(data_file)
-        forecast = m.predict(data_file)
-        forecast['fact'] = data_file['y'].reset_index(drop = True)
-        return forecast
-    
-    pred = fit_predict_model(data_file)
-
-
->>>>>>> 964a881b1e9f704668fc4d23432033b2e2c6279d
     def detect_anomalies(forecast):
         forecasted = forecast[['ds','trend', 'yhat', 'yhat_lower', 'yhat_upper', 'fact']].copy()
 
@@ -131,31 +107,17 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
                 .properties(width=870, height=450)\
                 .configure_title(fontSize=20)
               
-<<<<<<< HEAD
-=======
-              
-    chart= plot_anomalies(pred)
-    chart.save('filename.html')
->>>>>>> 964a881b1e9f704668fc4d23432033b2e2c6279d
 
 # red dots are the outliers
 # black is the actual data
 # the blue is the projected range of the values
 
     if anomaly_chart:
-<<<<<<< HEAD
         pred = fit_predict_model(data_file)
         pred = detect_anomalies(pred)
         chart = plot_anomalies(pred)
         chart.save('anomalies.html')
         webbrowser.open_new_tab('anomalies.html')
-=======
-        webbrowser.open_new_tab('filename.html')
-        
-        
-
-# output csv of predicted statistics 
->>>>>>> 964a881b1e9f704668fc4d23432033b2e2c6279d
 
 def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     accuracy_of_model = float(accuracy_of_model)
