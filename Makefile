@@ -1,5 +1,5 @@
 bin:
-	@python -m PyInstaller --onefile --noconsole main.py
+	@python -m PyInstaller hc-analysis.spec
 
 clean:
 	@rm -rf build dist __pycache__
