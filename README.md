@@ -14,7 +14,6 @@ Made with ❤️ by Team Fresh Meat
 
 ## Python Packages: 
 
-- PyInstaller
 - PySimpleGUI
 - Prophet
 - webbrowser
@@ -23,11 +22,13 @@ Made with ❤️ by Team Fresh Meat
 
 It should run in a Python environment just fine given these packages are installed. However, compiling is a little bit hacky, but it works!
 
-## Compiling for Windows:
+## Compiling:
 
-On Windows machine: `pyinstaller hc-analysis.spec` from within the repo's folder
+1. Make sure you have the Python package PyInstaller installed
 
-> Note: You may get an error related to manually importing Prophet or vega-datasets, this is due to the fact that we added the whole libraries to the repo to be manually included (related to a bug with pyinstaller not automatically detecting their uses). You can fix this by replacing them with a copy of your installation of Prophet and vega-datasets in the "manual-imports" folder (usually found in `C:\Users\\[$USER]\AppData\Local\Programs\Python\Python310\Lib\site-packages` on Windows)
+2. Run `pyinstaller hc-analysis.spec` from within the repo's folder (theoretically works the same for Windows, Linux and macOS provided the prerequisites are all met)
+
+> **Note:** You may get an error related to importing the Python libraries Prophet or vega-datasets, this is because PyInstaller is bad at recognizing imported Python libraries from the code. You can fix this by placing a copy of your installation of Prophet and vega-datasets in the code's "manual-imports" folder (usually found from `C:\Users\\[$USER]\AppData\Local\Programs\Python\Python310\Lib\site-packages` on Windows or `~/.local/lib/python3.10/site-packages/` on Linux)
 
 # Contributors
 

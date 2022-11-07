@@ -1,6 +1,6 @@
 import os
 import pandas
-from prophet import Prophet
+import prophet
 import altair as alt
 import webbrowser
 os.makedirs('output', exist_ok=True)
@@ -38,7 +38,7 @@ def analyze_data(csv_path, prediction_analysis, accuracy_of_model, number_of_per
     # building model: interval_width is what acuracy you want the interval to be in
     # you can also add different parameters from Prophet like daily_seasonality=True  to make your prediction more accurate depending on your data
 
-    model_formula = Prophet(interval_width=accuracy_of_model)
+    model_formula = prophet.Prophet(interval_width=accuracy_of_model)
     model = model_formula.fit(data_file)
     future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
     forecast = model_formula.predict(future)
@@ -130,7 +130,7 @@ def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
     data_file.columns = ['y', 'ds']
     
-    model_formula = Prophet(interval_width=accuracy_of_model)
+    model_formula = prophet.Prophet(interval_width=accuracy_of_model)
     model = model_formula.fit(data_file)
     
     future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
@@ -158,7 +158,7 @@ def data_predictions(csv_path, accuracy_of_model, number_of_periods):
     data_file.drop(['Last_Name', 'First_Name', 'Age', 'NPS', 'Date_of_Survey'], axis=1, inplace=True)
     data_file.columns = ['y', 'ds']
     
-    model_formula = Prophet(interval_width=accuracy_of_model)
+    model_formula = prophet.Prophet(interval_width=accuracy_of_model)
     model = model_formula.fit(data_file)
     
     future = model_formula.make_future_dataframe(periods=number_of_periods,freq='M')
